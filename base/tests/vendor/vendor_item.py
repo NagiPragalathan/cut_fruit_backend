@@ -44,7 +44,7 @@ def test_login():
 def test_create_vendor_item(access_token):
     url = BASE_URL + "vendors/"
     headers = {
-        "Authorization": f"JWT {access_token}"  # Ensure you're sending the token in the headers
+        "Authorization": f"Bearer {access_token}"  # Ensure you're sending the token in the headers
     }
     data = {
         "user": 1,  # Assuming the user ID of the test user is 1
@@ -70,7 +70,7 @@ def test_create_vendor_item(access_token):
 def test_list_vendor_items(access_token):
     url = BASE_URL + "vendors/"
     headers = {
-        "Authorization": f"JWT {access_token}"  # Include the token in the headers
+        "Authorization": f"Bearer {access_token}"  # Include the token in the headers
     }
     
     response = requests.get(url, headers=headers)
@@ -85,7 +85,7 @@ def test_list_vendor_items(access_token):
 def test_update_vendor_item(access_token, vendor_id):
     url = BASE_URL + f"vendors/{vendor_id}/"
     headers = {
-        "Authorization": f"JWT {access_token}"  # Include the token in the headers
+        "Authorization": f"Bearer {access_token}"  # Include the token in the headers
     }
     updated_data = {
         "name": "Updated Vendor A",
@@ -107,7 +107,7 @@ def test_update_vendor_item(access_token, vendor_id):
 def test_delete_vendor_item(access_token, vendor_id):
     url = BASE_URL + f"vendors/{vendor_id}/"
     headers = {
-        "Authorization": f"JWT {access_token}"  # Include the token in the headers
+        "Authorization": f"Bearer {access_token}"  # Include the token in the headers
     }
     
     response = requests.delete(url, headers=headers)

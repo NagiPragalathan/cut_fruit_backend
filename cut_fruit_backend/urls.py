@@ -1,35 +1,43 @@
-"""cut_fruit_backend URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
-from base.routes.auth import SignupView, LoginView
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 from rest_framework.routers import DefaultRouter
 from base.routes.vendor.vendor import VendorViewSet
+from rest_framework.permissions import AllowAny
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from base.routes.auth import SignupView, LoginView
 
 # Constants
 API_VERSION = 'v1'
 
+# Swagger Schema View
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Cut Fruit Backend API",
+        default_version='v1',
+        description="API documentation for the Cut Fruit backend.",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="contact@cutfruit.com"),
+        license=openapi.License(name="MIT License"),
+        security=[{
+            'Bearer': []  # This tells Swagger to use Bearer token authentication
+        }]
+    ),
+    public=True,
+    permission_classes=(AllowAny,),
+)
+
+# Router for VendorViewSet
 router = DefaultRouter()
 router.register(r'vendors', VendorViewSet, basename='vendor')
 
+# URL patterns
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
 
+# Authentication URL patterns
 auth_urlpatterns = [
     path('api/' + API_VERSION + '/signup/', SignupView.as_view(), name='signup'),
     path('api/' + API_VERSION + '/login/', LoginView.as_view(), name='login'),
@@ -37,10 +45,18 @@ auth_urlpatterns = [
     path('api/' + API_VERSION + '/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 
+# API URL patterns
 api_urlpatterns = [
     path(f'api/{API_VERSION}/', include(router.urls)),
 ]
 
+# Swagger UI URL pattern
+swagger_url_patterns = [
+    path(f'swagger/{API_VERSION}/', schema_view.with_ui('swagger', cache_timeout=0),
+         name='swagger-ui'),
+]
 
-urlpatterns += auth_urlpatterns 
+# Include all URL patterns
+urlpatterns += auth_urlpatterns
 urlpatterns += api_urlpatterns
+urlpatterns += swagger_url_patterns

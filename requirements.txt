@@ -3,3 +3,4 @@ djangorestframework-simplejwt
 django-cors-headers
 django
 requests
+drf-yasg
