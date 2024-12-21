@@ -5,4 +5,4 @@ class VendorSerializer(serializers.ModelSerializer):
     class Meta:
         model = VendorItems
         fields = '__all__'
-        read_only_fields = ['user']
+        read_only_fields = ['user', 'status'] 
